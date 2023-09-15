@@ -1,0 +1,38 @@
+1) Input's of Tool:
+a. Netlist file
+b. library file (lef file)
+c. constraint file (constraint.sdc file)
+4. IO file, Placement files etc (OPTIONAL)
+
+2) Output files:
+a. Utilization (Core and die area)
+b. Core density, module density, pin density etc. .
+c. Back-end floorplaning and placement, routing of cells
+
+-----------------------------------------xxxxxxxxxxxxxxxxxx-----------------------------------------------------------------------
+
+STEPS:
+1) invoke innovus command through terminal (gui window will open.)
+2) File > Import Design > {Add netlist,lef_file,power nets and ground nets.}
+3) Floorplan > Specify Floorplan > {Basic --> Core Margins by: Core to IO/Die Boundary} > {Advanced ---> Row spacing, For every row etc.}
+4) Power > connect Global Nets > {Specify Pin names and global net names.}
+5) Power > Power Planning > Add Ring > {Basic --> Add nets(VDD and VSS), select ring configurations(width(2um),spacing(1um) and offsets).}
+6) Power > Power Planning > Add Stripe > {Basic --> Add nets(VDD(horizontal stripes) and VSS(vertical stripes)),width(2um) and spacing(2um).} 
+7) Floorplan > check Floorplan > {Tick Placement,Power Domain,Partition clone alignment,feedthrough buffer,multilayer pin,narrow channel width.}  ----> Check Placement-density
+8) Route > Special Route(S route) > {Basic --> Add nets(VDD and VSS).}
+9) Floorplan > Edit Floorplan > {Create Placement Blockage, Create Routing Blockage, Create Pin blockage.}
+10) Generate Floorplan > Place Macros > {Gives effective utilization like module density,pin density etc.}
+11) Edit > Pin Editor > {Specify pin attributes.}
+
+-------------------------------------------------xxxxxxxxxxxxxxxxxxx------------------------------------------------------------------------
+
+Key Terms:
+A) Aspect ratio = Horizontal Routing utilization / Vertical Routing utilization.
+B) Core Utilization = Standrad cell Area / Core Utilization Area 
+C) Ring : To avoid IR drop. 
+D) Stripes: Standard cell take power from stripes. (It should be thick so, that resistance should be minimum)
+E) jogging : when we consider, Vertical metal as horizontal and horizontal metal as vertical due to DRC violations.
+F) S-Route: It connect Power to standard cell rows.
+G) Floorplanning: Core density, utilization area, no of instances etc.
+H) Soft-Placement Blockage : only inverters and buffers are allowed not any standard cells in particular area.
+I) spare cell : To find manufacturing defects, Physical cells: Precap cell (charging the power rails so IR drop meets vth.)

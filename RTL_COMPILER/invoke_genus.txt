@@ -1,0 +1,5 @@
+genus -legacy_ui
+
+source rc_script.tcl
+
+gui_show
