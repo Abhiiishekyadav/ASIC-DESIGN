@@ -1,0 +1,58 @@
+
+1) Input's of Tool:
+a. Netlist file
+b. library file (lef file)
+c. constraint file (constraint.sdc file)
+4. IO file, Placement files etc (OPTIONAL)
+
+2) Output files:
+a. Utilization (Core and die area)
+b. Core density, module density, pin density etc. .
+c. Back-end floorplaning and placement, routing of cells
+
+-----------------------------------------xxxxxxxxxxxxxxxxxx-----------------------------------------------------------------------
+
+STEPS:
+1) invoke innovus command through terminal (gui window will open.)
+2) File > Import Design > {Add netlist,lef_file,power nets and ground nets.}
+3) Floorplan > Specify Floorplan > {Basic --> Core Margins by: Core to IO/Die Boundary} > {Advanced ---> Row spacing, For every row etc.}
+4) Power > connect Global Nets > {Specify Pin names and global net names.}
+5) Power > Power Planning > Add Ring > {Basic --> Add nets(VDD and VSS), select ring configurations(width(2um),spacing(1um) and offsets).}
+6) Power > Power Planning > Add Stripe > {Basic --> Add nets(VDD(horizontal stripes) and VSS(vertical stripes)),width(2um) and spacing(2um).} 
+7) Floorplan > check Floorplan > {Tick Placement,Power Domain,Partition clone alignment,feedthrough buffer,multilayer pin,narrow channel width.}  ----> Check Placement-density
+Advance:
+8) Place > Physical Cell > Add End Caps(select fills).
+9) Place > Physical Cell > Add Well Tap(select fills).
+10) Place > Placement standard cell > Run Full Placement > Mode > Enable Place I/O pins > ok.
+11) Route > Special Route(S route) > {Basic --> Add nets(VDD and VSS).}
+12) Floorplan > Edit Floorplan > {Create Placement Blockage, Create Routing Blockage, Create Pin blockage.}
+13) Generate Floorplan > Place Macros > {Gives effective utilization like module density,pin density etc.}
+14) Edit > Pin Editor > {Specify pin attributes.}
+15) Saving Design: File > Save design > Data type : innovus > {design-name}.enc > ok
+16) saving netlist: File > Save > netlist > {netlist-name}.v > ok
+17) saving gds: File > Save > GDS/OASIS > {File-name}.gds > ok 
+
+If timing library imported unable to set setup and hold time:
+18) ECO > optimize design > design stage (Pre CTC)>optimization type-setup>ok   
+19) After writing tcl scripts we go {clock > CCopt clock tree debugger > ok}.
+
+-------------------------------------------------xxxxxxxxxxxxxxxxxxx------------------------------------------------------------------------
+
+Key Terms:
+A) Aspect ratio = Horizontal Routing utilization / Vertical Routing utilization or (Ratio of vertical height to horizontal width of core).
+B) Core Utilization = Standrad cell Area / Core Utilization Area  or (Total core Area % to be used for floorplanning).
+C) Power Ring (Around core boundary) : To avoid IR drop. 
+D) Power Stripes (Across core boundary): Standard cell take power from stripes. (It should be thick so, that resistance should be minimum)
+E) Select highest metal marked "H" for Top to bottom, and metals marked "V" for right to left because highest metal have highest widths and thus, lowest resistance.
+F) jogging : when we consider, Vertical metal as horizontal and horizontal metal as vertical due to DRC violations.
+G) S-Route: It connect Power to standard cell rows (Routing is done after adding the rings, so that all the cells, macros etc of each different module is connected properly through wire).
+H) Floorplanning: Core density, utilization area, no of instances etc.
+I) Soft-Placement Blockage : only inverters and buffers are allowed not any standard cells in particular area.
+J) spare cell : To find manufacturing defects, Physical cells: Precap cell (charging the power rails so IR drop meets vth.)
+K) Nano-Route: Nanoroute is done in which performs several iterations of routing with fast RC extraction and timing analysis to improve timing slack and after that again optimization done 
+   after post-route. 
+L) Pre-placement : End caps (Physical cells which are added in core boundary acting as blockage to avoids standard cells from moving out of boundary.) and well taps(They act like shunt resistance to avoid latch up effects.)
+M) CTC stage add real clk into the design and hence, Hold and setup analysis are done in that stages.
+N) ThE GDS file is binary format file which is not readable and is fed to the fabrication unit with data of various layers used in terms of geometrical shapes.
+
+
